@@ -1,0 +1,233 @@
+{% load static%}
+{% include 'head_foot/header.html' %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!--table start-->
+<div class="container-fluid py-4">
+
+
+  <div class="dropdown">
+    <select class="btn btn-light dropdown-toggle" name="department" aria-label="Default select example"onchange="filterfunc(this.value)"  id="Department_list_Dropdown">
+      <ul>
+        <option style="font-size:15px;" value = 'Select'>Select Department</option><br>
+          {% for depart in depart%}
+            <li><option style="font-size:15px;" value = "{{depart.id}}">{{depart.Department}}</option><br></li>
+          {% endfor %}   
+      </ul>
+    </select>
+  </div>
+  
+    
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Employee List</h6>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table id="myTable" class="table table-bordered">
+              
+              <thead>
+               
+                <tr>
+                  <th style="text-align:center;" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">S.no</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Employee Name</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Department</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">User</th>
+                  <th style="text-align:center;" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date Of Join</th>
+                  <th style="text-align:center;" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Admin Access</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                  
+                </tr>
+              </thead>
+             
+              <tbody id="tableBody">
+                {% if emp_lst %}
+                {% for emp in emp_lst %}
+                <tr>
+                  <td id="sNo" style="text-align:center;">{{ forloop.counter }}</td>
+                  <td id="employee_name">
+                    <div class="d-flex flex-column justify-content-center">
+                      <h6 class="mb-0 text-sm">{{ emp.Employee_Name }}</h6>
+                      <p class="text-xs text-secondary mb-0">{{ emp.Gender }}</p>
+                      <p class="text-xs text-secondary mb-0">{{ emp.Phone_Number }}</p>
+                      <p class="text-xs text-secondary mb-0">{{ emp.Email_Id }}</p>
+                    </div>
+                  </td>
+                  
+                  <td style="text-align:center;" id="department">
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm">{{ emp.department_name}}</h6>
+                  </div>
+                </td>
+
+                  <td id="user">{{ emp.User }}
+                    <div class="d-flex flex-column justify-content-center">
+                    </div>
+                  </td>
+                 
+                  <td style="text-align:center;" id="doj">
+                    <div class="d-flex flex-column justify-content-center">
+                      <h6 class="mb-0 text-sm">{{ emp.Date_Of_Joining }}</h6>
+                    </div>
+                  </td>
+
+                  <td id="admin_access">{{ emp.Admin_Access }}
+                    <div class="d-flex flex-column justify-content-center">
+                    </div>
+                  </td>
+                  
+                  <td id="status">{{ emp.Status }}
+                    <div class="d-flex flex-column justify-content-center">
+                    </div>
+                  </td>
+                  
+                  <td style="text-align:center;">
+                    <a href="{% url 'employee_edit' employee_id=emp.id %}"><i class="fas fa-edit"></i></a>
+                    &nbsp;&nbsp;&nbsp;<a href="{% url 'employee_delete' employee_id=emp.id %}"><i class="fas fa-trash-alt"></i></a>
+                  </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+              </tbody>     
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'head_foot/footer.html' %}
+
+<script>
+  function filterfunc() {
+    var dta = $("#Department_list_Dropdown").val();
+    console.log(dta);
+  
+    if (dta === 'Select') {
+      $.ajax({
+        url: '/employee_lists/',
+        type: 'GET',
+        success: function (response) {
+          console.log(response);
+          var tableBody = $('#tableBody');
+          tableBody.empty();
+  
+          for (var i = 0; i < response.length; i++) {
+            var rowData = response[i];
+            var row = '<tr>' +
+              '<td id="sNo" style="text-align:center;">'+(i + 1 )+'</td>'+
+              '<td id="employee_name">'+
+                '<div class="d-flex flex-column justify-content-center">'+
+                  '<h6 class="mb-0 text-sm">'+ rowData.Employee_Name +'</h6>'+
+                  '<p class="text-xs text-secondary mb-0">'+ rowData.Gender +'</p>'+
+                  '<p class="text-xs text-secondary mb-0">'+ rowData.Phone_Number +'</p>'+
+                  '<p class="text-xs text-secondary mb-0">'+ rowData.Email_Id +'</p>'+
+                '</div>'+
+              '</td>'+
+              
+              '<td style="text-align:center;" id="department">'+
+              '<div class="d-flex flex-column justify-content-center">'+
+                '<h6 class="mb-0 text-sm">'+ rowData.department_name +'</h6>'+
+              '</div>'+
+              '</td>'+
+
+              '<td id="user">{{ emp.User }}'+
+                '<div class="d-flex flex-column justify-content-center">'+
+                '</div>'+
+              '</td>'+
+              
+              '<td style="text-align:center;" id="doj">'+
+                '<div class="d-flex flex-column justify-content-center">'+
+                  '<h6 class="mb-0 text-sm">'+ rowData.Date_Of_Joining +'</h6>'+
+              '</div>'+
+              '</td>'+
+
+              '<td id="admin_access">{{ emp.Admin_Access }}'+
+                '<div class="d-flex flex-column justify-content-center">'+
+              '</div>'+
+              '</td>'+
+              
+              '<td id="status">{{ emp.Status }}'+
+               '<div class="d-flex flex-column justify-content-center">'+
+                '</div>'+
+              '</td>'+
+              
+              '<td style="text-align:center;">'+
+                '<a>'+'<i class="fas fa-edit">'+'</i>'+'</a>'+
+                '&nbsp;'+'&nbsp;'+'&nbsp;'+'<a>'+'<i class="fas fa-trash-alt">'+'</i>'+'</a>'+
+              '</td>'+
+              '</tr>';
+            tableBody.append(row);
+          }
+        }
+      });
+    } else {
+     
+      $.ajax({
+        url: '/employee_filter/',
+        type: 'POST',
+        dataType: 'json',
+        data: {department: dta, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function(response) {
+          console.log(response)
+        
+          var tableBody = $('#tableBody');
+          tableBody.empty();
+
+          for (var i = 0; i < response.length; i++) {
+            var rowData = response[i];
+
+            var row = '<tr>' +
+              '<td id="sNo" style="text-align:center;">'+(i + 1 )+'</td>'+
+              '<td id="employee_name">'+
+                '<div class="d-flex flex-column justify-content-center">'+
+                  '<h6 class="mb-0 text-sm">'+ rowData.Employee_Name +'</h6>'+
+                  '<p class="text-xs text-secondary mb-0">'+ rowData.Gender +'</p>'+
+                  '<p class="text-xs text-secondary mb-0">'+ rowData.Phone_Number +'</p>'+
+                  '<p class="text-xs text-secondary mb-0">'+ rowData.Email_Id +'</p>'+
+                '</div>'+
+              '</td>'+
+              
+              '<td style="text-align:center;" id="department">'+
+              '<div class="d-flex flex-column justify-content-center">'+
+                '<h6 class="mb-0 text-sm">'+ rowData.department_name +'</h6>'+
+              '</div>'+
+              '</td>'+
+
+              '<td id="user">{{ emp.User }}'+
+                '<div class="d-flex flex-column justify-content-center">'+
+                '</div>'+
+              '</td>'+
+              
+              '<td style="text-align:center;" id="doj">'+
+                '<div class="d-flex flex-column justify-content-center">'+
+                  '<h6 class="mb-0 text-sm">'+ rowData.Date_Of_Joining +'</h6>'+
+              '</div>'+
+              '</td>'+
+
+              '<td id="admin_access">{{ emp.Admin_Access }}'+
+                '<div class="d-flex flex-column justify-content-center">'+
+              '</div>'+
+              '</td>'+
+              
+              '<td id="status">{{ emp.Status }}'+
+               '<div class="d-flex flex-column justify-content-center">'+
+                '</div>'+
+              '</td>'+
+              
+              '<td style="text-align:center;">'+
+                '<a>'+'<i class="fas fa-edit">'+'</i>'+'</a>'+
+                '&nbsp;'+'&nbsp;'+'&nbsp;'+'<a>'+'<i class="fas fa-trash-alt">'+'</i>'+'</a>'+
+              '</td>'+
+              '</tr>';
+            tableBody.append(row);
+          }
+        }
+      });
+    }
+  }
+</script>

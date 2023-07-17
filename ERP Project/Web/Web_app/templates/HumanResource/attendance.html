@@ -1,0 +1,1070 @@
+{% load static%}
+{% include 'head_foot/header.html' %}
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
+    <!--table start-->
+
+<div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <div class="dropdown">
+                  <input style="width:100%;" type="date" class="btn btn-light dropdown-toggle" name="date" id="datepicker" onchange="datewisefilterfunction(this.value)" min="0" max="0" />
+                  <script>
+                    $(document).ready(function() {
+                      var currentDate = new Date(); 
+                      var dateString = currentDate.toISOString().split('T')[0];
+                      $("#datepicker").attr('max', dateString);
+                      $("#datepicker").val(dateString); 
+                    });
+                  </script>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <div class="dropdown">
+                  <select class="btn btn-light dropdown-toggle" name="branch" aria-label="Default select example" onchange="filterfunction(this.value)"  id="Branch_list_Dropdown">
+                    <ul>
+                      <option style="font-size:15px;text-align:center;" value = 'Select'>Select Branch</option><br>
+                        {% for branch_lst in branch_lst%}
+                          <li ><option style="font-size:15px;" value = "{{branch_lst.id}}">{{branch_lst.Branch}}</option><br></li>
+                        {% endfor %}   
+                    </ul>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card-body p-3">
+          <div class="row">
+            <div class="col-8">
+              <div class="numbers">
+                <div class="dropdown">
+                  <select class="btn btn-light dropdown-toggle"style="width:85%;text-align:center;" id = "applyall" name="Apply_to" aria-label="Default select example">
+                    <ul>
+                      <li><option style="font-size:15px;" value =' Apply To All'>Apply To All </option><br></li>
+                      <li><option style="font-size:15px;" value = "Present">Present</option><br></li>
+                      <li><option style="font-size:15px;" value = "Absent">Absent</option><br></li>
+                      <li><option style="font-size:15px;" value = "Sick">Sick</option><br></li>
+                      <li><option style="font-size:15px;" value = "Casual">Casual</option><br></li>
+                    </ul>
+                  </select> 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card-body p-3">
+        <div class="row">
+          <div class="col-8">
+            <div class="numbers">
+              <div class="dropdown">
+                <button type="button"style="font-size:15px;position:absolute;right:155%;" onclick="applyfunction()" id="apply" class="btn btn-success">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+<!--Table Started-->
+<div class="row">
+  <div class="col-12">
+    <div class="card mb-4">
+      <div class="card-header pb-0">
+      <h6>Attendance</h6>
+      </div>
+      <div class="card-body px-0 pt-0 pb-2">
+        <div class="table-responsive p-0">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th style="text-align:center;" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                  <input type="checkbox" id="selectAll" class="Checkboxs" name="checkBoxs" ></th> 
+                  
+                <th style="text-align:center;" class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">S.no</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Employee Name</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Working Hrs</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Worked Hrs</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Over Time</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Permission</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">CL</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SL</th>
+                <th style="width:1%;"class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                <th style="width:1%;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+              </tr>
+            </thead>
+              
+                  {% if emp_lst%}
+                  <tbody id="tableBody">
+                  {% for emp_lst in emp_lst%}
+                  <tr>
+                    <td style="text-align:center;"> 
+                      <input type="checkbox" id="checkbox" class="Checkbox"  data-id= "{{emp_lst.id}}" name="checkBox" value={{emp_lst.id}}>
+                    </td>
+
+                    <td id="id"  style="text-align:center;">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">  {{emp_lst.id}}</h6>
+                      </div>
+                    </td>
+
+                    <td>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">
+                          <input type="name" style="border-style:none;background-color:white;" class="form-control" name="employee_name" id="Emp_name" value="{{emp_lst.Employee_Name}}"readonly>
+                        </h6>
+                      </div>
+                    </td>
+
+                    <td style="width:3%;text-align:center;">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">
+                          <input type="number" style="border-style:none;background-color:white;text-align:center;" class="form-control" name="working_hours" id="wrking_hour" value="{{emp_lst.Working_Hours}}"readonly>
+                        </h6>
+                      </div>
+                    </td>
+
+                    <td style="width:4%;" >
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">
+                          <input type="number" class="form-control" name="worked_hours" id="wrked_hour" value="0">
+                        </h6>
+                      </div>
+                    </td>
+
+                    <td style="width:4%;">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">
+                          <input type="number" class="form-control" name="over_time" id="ovrtime" value="0">
+                        </h6>
+                      </div>
+                    </td>
+
+                    <td style="width:4%;border-style:none;" >
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">
+                          <input type="number" class="form-control" name="permission" id="prmison" value="0">
+                        </h6>
+                      </div>
+                    </td>
+
+                    <td style="width:3%;text-align:center;" value = 0 name="cl" id="clv">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm"></h6>
+                      </div>
+                    </td>
+
+                    <td style="width:3%;text-align:center;" value = 0 name="sl" id="slv">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm"></h6>
+                      </div>
+                    </td>
+
+                    <td>
+                      <input type="name" style="border-style:none;background-color:white;" class="form-control" id="sts" name="status" value="-NA-" id="floatingInput" readonly></h6>
+                    </td>
+
+                    <td style="width:19%;" id="Attendance"> 
+                      <button style="padding: 3px 5px;" data-id= "{{emp_lst.id}}" id="aa" type="button" onclick="presentfunction(this)" value= "Present" class="btn btn-success">Present</button>
+                      <button style="padding: 3px 5px;" data-id= "{{emp_lst.id}}" id="bb"type="button" onclick="Absentfunction(this)" value= "Absent" class="btn btn-danger">Absent</button>
+                      <button style="padding: 3px 5px;" data-id= "{{emp_lst.id}}" id="cc"type="button" onclick="Casualfunction(this)" value= "Casual" class="btn btn-info">Casual</button>
+                      <button style="padding: 3px 5px; width:20%;" data-id= "{{emp_lst.id}}" id="dd"type="button" onclick="Sickfunction(this)" value= "Sick" class="btn btn-warning">Sick</button>
+                    </td>
+                             
+                  </tr>
+                    
+                {% endfor %}
+                  {% endif %} 
+            </tbody> 
+              
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'head_foot/footer.html' %}
+
+
+  
+<script>
+  function filterfunction() {
+    var dta = $("#Branch_list_Dropdown").val();
+    console.log(dta);
+  
+    if (dta === 'Select') {
+      $.ajax({
+        url: '/employee_lists/',
+        type: 'GET',
+        success: function (response) {
+          console.log(response);
+          var tableBody = $('#tableBody');
+          tableBody.empty();
+  
+          for (var i = 0; i < response.length; i++) {
+            var rowData = response[i];
+            var row =
+            '<tr>' +
+            '<td style="text-align:center;">' + 
+            '<input type="checkbox" id="checkbox" class="Checkbox"  data-id="' + rowData.id + '"  name="checkBox" >' + '</td>' +
+            '<td id="id"  style="text-align:center;">' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + (i + 1 ) +  '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td id="employee_name" >' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="name" style="border-style:none;background-color:white;" class="form-control" name="employee_name" id="Emp_name" value="' + rowData.Employee_Name + '" readonly>' + '</h6>' +
+            ' </div>' + '</td>' +
+  
+            '<td style="width:3%;text-align:center;">' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="border-style:none;background-color:white;text-align:center;" class="form-control" name="working_hours" id="wrking_hour" value="' + rowData.Working_Hours + '" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm"><input type="number"  class="form-control" name="worked_hours" min="0" id="wrked_hour" value="0">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;>' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="over_time"  min="0" id="ovrtime" value="0">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;border-style:none;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="permission"  min="0" id="prmison" value="0">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="cl" id="clv" value="0" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="sl" id="slv" value="0" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:7%;">' +
+            '<input type="name" style="border-style:none;background-color:white;" class="form-control" id="sts" name="status" value="-NA-" id="floatingInput" readonly>' + '</h6>' +
+            '</td>' +
+  
+            '<td style="width:19%;" id="Attendance">' +
+              '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="presentfunction(this)" value="Present" class="btn btn-success">Present</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="Absentfunction(this)" value="Absent" class="btn btn-danger">Absent</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" id="casualbtn" onclick="Casualfunction(this)" value="Casual" class="btn btn-info">Casual</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px; width: 20%;" data-id="' + rowData.id + '" type="button" onclick="Sickfunction(this)" value="Sick" class="btn btn-warning">Sick</button>' +
+              '</td>';
+            '</tr>';
+          tableBody.append(row);
+          }
+        }
+      });
+    } else {
+     
+      $.ajax({
+        url: '/branch_filter/',
+        type: 'POST',
+        dataType: 'json',
+        data: {branchs: dta, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function(response) {
+          console.log(response)
+          
+          var tableBody = $('#tableBody');
+          tableBody.empty();
+
+          for (var i = 0; i < response.length; i++) {
+            var rowData = response[i];
+
+            var row =
+            '<tr>' +
+            '<td style="text-align:center;">' + 
+            '<input type="checkbox" id="checkbox" class="Checkbox"  data-id="' + rowData.id + '"  name="checkBox" >' + '</td>' +
+            '<td id="id"  style="text-align:center;">' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + (i + 1 ) +  '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td id="employee_name" >' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="name" style="border-style:none;background-color:white;" class="form-control" name="employee_name" id="Emp_name" value="' + rowData.Employee_Name + '" readonly>' + '</h6>' +
+            ' </div>' + '</td>' +
+  
+            '<td style="width:3%;text-align:center;">' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="border-style:none;background-color:white;text-align:center;" class="form-control" name="working_hours" id="wrking_hour" value="' + rowData.Working_Hours + '" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm"><input type="number"  class="form-control" name="worked_hours" min="0" id="wrked_hour" value="0">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;>' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="over_time"  min="0" id="ovrtime" value="0">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;border-style:none;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="permission"  min="0" id="prmison" value="0">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="cl" id="clv" value="0" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="sl" id="slv" value="0" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:7%;">' +
+            '<input type="name" style="border-style:none;background-color:white;" class="form-control" id="sts" name="status" value="-NA-" id="floatingInput" readonly>' + '</h6>' +
+            '</td>' +
+  
+            '<td style="width:19%;" id="Attendance">' +
+              '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="presentfunction(this)" value="Present" class="btn btn-success">Present</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="Absentfunction(this)" value="Absent" class="btn btn-danger">Absent</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" id="casualbtn" onclick="Casualfunction(this)" value="Casual" class="btn btn-info">Casual</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px; width: 20%;" data-id="' + rowData.id + '" type="button" onclick="Sickfunction(this)" value="Sick" class="btn btn-warning">Sick</button>' +
+              '</td>';
+            '</tr>';
+          tableBody.append(row);
+          }
+        }
+      });
+    }
+  }
+</script>
+
+
+<script>
+   
+   function presentfunction(button) {
+    var row = button.parentNode.parentNode;
+    var statusCell = row.cells[9];
+    var res = (statusCell.textContent = 'Present');
+    console.log(res)
+    var date = $("#datepicker").val();
+    console.log(date);
+
+    var employeName = row.querySelector('[name="employee_name"]').value;
+    console.log(employeName)
+
+    var workingHours = row.querySelector('[name="working_hours"]').value;
+    console.log(workingHours)
+
+    var workedHours = row.querySelector('[name="worked_hours"]').value;
+    console.log(workedHours)
+
+    var overTime = row.querySelector('[name="over_time"]').value;
+    console.log(overTime)
+
+    var perMission = row.querySelector('[name="permission"]').value;
+    console.log(perMission)
+
+    var casualLeave = row.querySelector('[name="cl"]').value;
+    console.log(casualLeave)
+
+    var sickLeave = row.querySelector('[name="sl"]').value;
+    console.log(sickLeave)
+
+    var sts = $("#aa").val();
+    console.log(sts);
+     
+    var idd = button.dataset.id;
+    console.log("Employeeid = ",idd);
+
+
+    $.ajax({
+      url: '/attendance/',
+      type: 'POST',
+      
+      data: {
+      'employee_name':idd,
+      'date':date,
+      'working_hours':workingHours,
+      'worked_hours':workedHours,
+      'over_time':overTime,
+      'permission':perMission,
+      'cl':casualLeave,
+      'sl':sickLeave,
+      'status':res,
+
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+      dataType: 'json',
+      success: function(response) {
+        console.log("++++++++");
+
+        console.log(response);
+        
+        
+      },
+      
+      error: function(error) {
+        console.log("--------");
+
+        console.log(error);
+       
+      }
+    });
+  }
+  
+
+  function Absentfunction(button) {
+  var row = button.parentNode.parentNode;
+  var statusCell = row.cells[9];
+  res = statusCell.textContent = 'Absent';
+  
+  var employeName = row.querySelector('[name="employee_name"]').value; 
+  var workingHours = row.querySelector('[name="working_hours"]').value;
+  var workedHours = row.querySelector('[name="worked_hours"]').value;
+  var overTime = row.querySelector('[name="over_time"]').value;
+  var perMission = row.querySelector('[name="permission"]').value;
+  var casualLeave = row.querySelector('[name="cl"]').value;
+  var sickLeave = row.querySelector('[name="sl"]').value;
+
+
+  console.log(employeName);
+
+  console.log("Working Hours:", workingHours);
+ 
+  var idd = button.dataset.id;
+  console.log("++++++",idd);
+
+  var date = $("#datepicker").val();
+  console.log(date);
+
+  var sts = $("#bb").val();
+  console.log(sts);
+
+  $.ajax({
+    url: '/attendance/',
+    type: 'POST',
+    
+    data: {
+    'employee_name':idd,
+    'date':date,
+    'working_hours':workingHours,
+    'worked_hours':workedHours,
+    'over_time':overTime,
+    'permission':perMission,
+    'cl':casualLeave,
+    'sl':sickLeave,
+    'status':res,
+
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+    },
+    dataType: 'json',
+    success: function(response) {
+      console.log("++++++++");
+
+      console.log(response);
+      
+    },
+    
+    error: function(error) {
+      console.log("--------");
+
+      console.log(error);
+     
+    }
+  });
+}
+
+
+  
+  function Casualfunction(button) {
+  var row = button.parentNode.parentNode;
+  var statusCell = row.cells[9];
+  res = statusCell.textContent = 'Casual';
+
+  var clvInput = $(button).closest('tr').find('#clv');
+  var currentCount = parseInt(clvInput.val());
+  var newCount = currentCount + 1;
+  clvInput.val(newCount);
+
+  var employeName = row.querySelector('[name="employee_name"]').value;
+  var workingHours = row.querySelector('[name="working_hours"]').value;
+  var workedHours = row.querySelector('[name="worked_hours"]').value;
+  var overTime = row.querySelector('[name="over_time"]').value;
+  var perMission = row.querySelector('[name="permission"]').value;
+  var casualLeave = row.querySelector('[name="cl"]').value;
+  var sickLeave = row.querySelector('[name="sl"]').value;
+
+
+  console.log(employeName);
+
+  console.log("Working Hours:", workingHours);
+ 
+  var idd = button.dataset.id;
+  console.log("++++++",idd);
+
+  var date = $("#datepicker").val();
+  console.log(date);
+
+  var sts = $("#cc").val();
+  console.log(sts);
+
+  $.ajax({
+    url: '/attendance/',
+    type: 'POST',
+    
+    data: {
+    'employee_name':idd,
+    'date':date,
+    'working_hours':workingHours,
+    'worked_hours':workedHours,
+    'over_time':overTime,
+    'permission':perMission,
+    'cl':casualLeave,
+    'sl':sickLeave,
+    'status':res,
+
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+    },
+    dataType: 'json',
+    success: function(response) {
+      console.log("++++++++");
+
+      console.log(response);
+      
+    },
+    
+    error: function(error) {
+      console.log("--------");
+
+      console.log(error);
+     
+    }
+  });
+}
+
+
+function Sickfunction(button) {
+  var row = button.parentNode.parentNode;
+  var statusCell = row.cells[9];
+  res = statusCell.textContent = 'Sick';
+
+  var slvInput = $(button).closest('tr').find('#slv');
+  var currentCount = parseInt(slvInput.val());
+  var newCount = currentCount + 1;
+  slvInput.val(newCount);
+  
+  var employeName = row.querySelector('[name="employee_name"]').value;
+  var workingHours = row.querySelector('[name="working_hours"]').value;
+  var workedHours = row.querySelector('[name="worked_hours"]').value;
+  var overTime = row.querySelector('[name="over_time"]').value;
+  var perMission = row.querySelector('[name="permission"]').value;
+  var casualLeave = row.querySelector('[name="cl"]').value;
+  var sickLeave = row.querySelector('[name="sl"]').value;
+
+
+  console.log(employeName);
+
+  console.log("Working Hours:", workingHours);
+ 
+  var idd = button.dataset.id;
+  console.log("++++++",idd);
+
+  var date = $("#datepicker").val();
+  console.log(date);
+
+  var sts = $("#dd").val();
+  console.log(sts);
+
+  $.ajax({
+    url: '/attendance/',
+    type: 'POST',
+    
+    data: {
+    'employee_name':idd,
+    'date':date,
+    'working_hours':workingHours,
+    'worked_hours':workedHours,
+    'over_time':overTime,
+    'permission':perMission,
+    'cl':casualLeave,
+    'sl':sickLeave,
+    'status':res,
+
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+    },
+    dataType: 'json',
+    success: function(response) {
+      console.log("++++++++");
+
+      console.log(response);
+      
+    },
+    
+    error: function(error) {
+      console.log("--------");
+
+      console.log(error);
+     
+    }
+  });
+}
+
+</script>
+
+<script>
+  function datewisefilterfunction() {
+  
+    var datta = $("#datepicker").val();
+
+    $.ajax({
+      url: '/datewise_atend/',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        date: datta,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      success: function (response) {
+        console.log(response);
+  
+        var tableBody = $('#tableBody');
+        tableBody.empty();
+
+        for (var i = 0; i < response.length; i++) {
+          var rowData = response[i];
+          
+
+          var row =
+          '<tr>' +
+            '<td style="text-align:center;">' + 
+            '<input type="checkbox" id="checkbox" class="Checkbox"  data-id="' + rowData.id + '"  name="checkBox" >' + '</td>' +
+            '<td id="id"  style="text-align:center;">' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + (i + 1) +  '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td id="employee_name" >' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="name" style="border-style:none;background-color:white;" class="form-control" name="employee_name" id="Emp_name" value="' + rowData.Employee_Name + '" readonly>' + '</h6>' +
+            ' </div>' + '</td>' +
+  
+            '<td style="width:3%;text-align:center;">' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="border-style:none;background-color:white;text-align:center;" class="form-control" name="working_hours" id="wrking_hour" value="' + rowData.Working_Hours + '" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm"><input type="number"  class="form-control" name="worked_hours"  min="0" id="wrked_hour" value="' + rowData.Attendance.Worked_Hours + '">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;>' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="over_time"  min="0" id="ovrtime" value="' + rowData.Attendance.Over_Time + '">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;border-style:none;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="permission"  min="0" id="prmison" value="' + rowData.Attendance.Permission + '">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:6%;border-style:none;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="cl" id="clv" value="' + rowData.Attendance.Casual_Leave + '" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+
+            '<td style="width:6%;border-style:none;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="sl" id="slv" value="' + rowData.Attendance.Sick_Leave + '" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:7%;">' +
+            '<input type="name" style="border-style:none;background-color:white;" class="form-control" id="sts" name="status" value="' + rowData.Attendance.Status + '" id="floatingInput" readonly>' + '</h6>' +
+            '</td>' +
+  
+            '<td style="width:19%;" id="Attendance">' +
+              '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="presentfunction(this)" value="Present" class="btn btn-success">Present</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="Absentfunction(this)" value="Absent" class="btn btn-danger">Absent</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" id="casualbtn" onclick="Casualfunction(this)" value="Casual" class="btn btn-info">Casual</button>' +
+              '&nbsp;' + '<button style="padding: 3px 5px; width: 20%;" data-id="' + rowData.id + '" type="button" onclick="Sickfunction(this)" value="Sick" class="btn btn-warning">Sick</button>' +
+              '</td>';
+            '</tr>';
+          tableBody.append(row);
+        }
+      }
+    });
+  
+}
+
+</script>
+
+<script>
+  $(document).ready(function() {
+  
+    var datta = $("#datepicker").val();
+
+    $.ajax({
+      url: '/datewise_atend/',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        date: datta,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      success: function (response) {
+        console.log(response);
+  
+        var tableBody = $('#tableBody');
+        tableBody.empty();
+
+        for (var i = 0; i < response.length; i++) {
+          var rowData = response[i];
+       
+          var row =
+            '<tr>' +
+            '<td style="text-align:center;">' + 
+            '<input type="checkbox" id="checkbox" class="Checkbox"  data-id="' + rowData.id + '"  name="checkBox" >' + '</td>' +
+            '<td id="id"  style="text-align:center;">' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + (i + 1 ) +  '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td id="employee_name" >' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="name" style="border-style:none;background-color:white;" class="form-control" name="employee_name" id="Emp_name" value="' + rowData.Employee_Name + '" readonly>' + '</h6>' +
+            ' </div>' + '</td>' +
+  
+            '<td style="width:3%;text-align:center;">' +
+            '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="border-style:none;background-color:white;text-align:center;" class="form-control" name="working_hours" id="wrking_hour" value="' + rowData.Working_Hours + '" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm"><input type="number"  class="form-control" name="worked_hours" min="0" id="wrked_hour" value="' + rowData.Attendance.Worked_Hours + '">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;>' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="over_time"  min="0" id="ovrtime" value="' + rowData.Attendance.Over_Time + '">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:4%;border-style:none;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="permission"  min="0" id="prmison" value="' + rowData.Attendance.Permission + '">' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="cl" id="clv" value="' + rowData.Attendance.Casual_Leave + '" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+            '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="sl" id="slv" value="' + rowData.Attendance.Sick_Leave + '" readonly>' + '</h6>' +
+            '</div>' + '</td>' +
+  
+            '<td style="width:7%;">' +
+            '<input type="name" style="border-style:none;background-color:white;" class="form-control" id="sts" name="status" value="' + rowData.Attendance.Status + '" id="floatingInput" readonly>' + '</h6>' +
+            '</td>' +
+  
+            '<td style="width:19%;" id="Attendance">' +
+            '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="presentfunction(this)" value="Present" class="btn btn-success">Present</button>' +
+            '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="Absentfunction(this)" value="Absent" class="btn btn-danger">Absent</button>' +
+            '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" id="casualbtn" onclick="Casualfunction(this)" value="Casual" class="btn btn-info">Casual</button>' +
+            '&nbsp;' + '<button style="padding: 3px 5px; width: 20%;" data-id="' + rowData.id + '" type="button" onclick="Sickfunction(this)" value="Sick" class="btn btn-warning">Sick</button>' +
+            '</td>';
+          '</tr>';
+          tableBody.append(row);
+        }
+      }
+    });
+  
+});
+
+</script>
+
+<script>
+  // Apply All
+  function applyfunction() {
+    var applyToValue = document.getElementById('applyall').value;
+    var selectedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    var datas = [];
+  
+    var selectAllCheckbox = document.getElementById('selectAll');
+    var isSelectAllChecked = selectAllCheckbox.checked;
+  
+    if (isSelectAllChecked) {
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  
+      checkboxes.forEach(function (checkbox) {
+        if (checkbox !== selectAllCheckbox) {
+          checkbox.checked = isSelectAllChecked;
+  
+          if (checkbox.checked) {
+            var row = checkbox.closest('tr');
+  
+            var roData = {
+              id: checkbox.dataset.id,
+              employeeName: row.querySelector('[name="employee_name"]').value,
+              date: document.querySelector('#datepicker').value,
+              workingHours: row.querySelector('[name="working_hours"]').value,
+              workedHours: row.querySelector('[name="worked_hours"]').value,
+              overTime: row.querySelector('[name="over_time"]').value,
+              perMission: row.querySelector('[name="permission"]').value,
+              casualLeave: row.querySelector('[name="cl"]').value,
+              sickLeave: row.querySelector('[name="sl"]').value,
+              sTatus: document.querySelector('#applyall').value,
+            };
+  
+            datas.push(roData);
+  
+            $.ajax({
+              url: '/attendance/',
+              type: 'POST',
+              data: {
+                // Data parameters being sent to the server
+                'employee_name': roData.id,
+                'date': roData.date,
+                'working_hours': roData.workingHours,
+                'worked_hours': roData.workedHours,
+                'over_time': roData.overTime,
+                'permission': roData.perMission,
+                'cl': roData.casualLeave,
+                'sl': roData.sickLeave,
+                'status': roData.sTatus,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+              dataType: 'json',
+            
+              success: function (response, status, xhr) {
+
+                var datta = $("#datepicker").val();
+
+                $.ajax({
+                  url: '/datewise_atend/',
+                  type: 'POST',
+                  dataType: 'json',
+                  data: {
+                    date: datta,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                  },
+                  success: function (response) {
+                    console.log(response);
+              
+                    var tableBody = $('#tableBody');
+                    tableBody.empty();
+        
+                    for (var i = 0; i < response.length; i++) {
+                      var rowData = response[i];
+                  
+                      var row =
+                        '<tr>' +
+                        '<td style="text-align:center;">' + 
+                        '<input type="checkbox" id="checkbox" class="Checkbox"  data-id="' + rowData.id + '"  name="checkBox" >' + '</td>' +
+                        '<td id="id"  style="text-align:center;">' +
+                        '<div class="d-flex flex-column justify-content-center">' +
+                        '<h6 class="mb-0 text-sm">' + (i + 1 ) +  '</h6>' +
+                        '</div>' + '</td>' +
+              
+                        '<td id="employee_name" >' +
+                        '<div class="d-flex flex-column justify-content-center">' +
+                        '<h6 class="mb-0 text-sm">' + '<input type="name" style="border-style:none;background-color:white;" class="form-control" name="employee_name" id="Emp_name" value="' + rowData.Employee_Name + '" readonly>' + '</h6>' +
+                        ' </div>' + '</td>' +
+              
+                        '<td style="width:3%;text-align:center;">' +
+                        '<div class="d-flex flex-column justify-content-center">' +
+                        '<h6 class="mb-0 text-sm">' + '<input type="number" style="border-style:none;background-color:white;text-align:center;" class="form-control" name="working_hours" id="wrking_hour" value="' + rowData.Working_Hours + '" readonly>' + '</h6>' +
+                        '</div>' + '</td>' +
+              
+                        '<td style="width:4%;">' + '<div class="d-flex flex-column justify-content-center">' +
+                        '<h6 class="mb-0 text-sm"><input type="number"  class="form-control" name="worked_hours" min="0" id="wrked_hour" value="' + rowData.Attendance.Worked_Hours + '">' + '</h6>' +
+                        '</div>' + '</td>' +
+              
+                        '<td style="width:4%;>' + '<div class="d-flex flex-column justify-content-center">' +
+                        '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="over_time"  min="0" id="ovrtime" value="' + rowData.Attendance.Over_Time + '">' + '</h6>' +
+                        '</div>' + '</td>' +
+              
+                        '<td style="width:4%;border-style:none;">' + '<div class="d-flex flex-column justify-content-center">' +
+                        '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="permission"  min="0" id="prmison" value="' + rowData.Attendance.Permission + '">' + '</h6>' +
+                        '</div>' + '</td>' +
+              
+                        '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+                        '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="cl" id="clv" value="' + rowData.Attendance.Casual_Leave + '" readonly>' + '</h6>' +
+                        '</div>' + '</td>' +
+              
+                        '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+                        '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="sl" id="slv" value="' + rowData.Attendance.Sick_Leave + '" readonly>' + '</h6>' +
+                        '</div>' + '</td>' +
+              
+                        '<td style="width:7%;">' +
+                        '<input type="name" style="border-style:none;background-color:white;" class="form-control" id="sts" name="status" value="' + rowData.Attendance.Status + '" id="floatingInput" readonly>' + '</h6>' +
+                        '</td>' +
+              
+                        '<td style="width:19%;" id="Attendance">' +
+                          '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="presentfunction(this)" value="Present" class="btn btn-success">Present</button>' +
+                          '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="Absentfunction(this)" value="Absent" class="btn btn-danger">Absent</button>' +
+                          '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" id="casualbtn" onclick="Casualfunction(this)" value="Casual" class="btn btn-info">Casual</button>' +
+                          '&nbsp;' + '<button style="padding: 3px 5px; width: 20%;" data-id="' + rowData.id + '" type="button" onclick="Sickfunction(this)" value="Sick" class="btn btn-warning">Sick</button>' +
+                          '</td>';
+                        '</tr>';
+                      tableBody.append(row);
+                    }
+                  }
+                });
+                
+              },
+              error: function(error) {
+                console.log("--------error");
+                console.log(error);
+              }
+            });
+          }
+        }
+      });
+    } else {
+      selectedCheckboxes.forEach(function(checkbox) {
+        var row = checkbox.closest('tr');
+      
+        var rowData = {
+          id: checkbox.dataset.id,
+          employeeName: row.querySelector('[name="employee_name"]').value,
+          date: document.querySelector('#datepicker').value,
+          workingHours: row.querySelector('[name="working_hours"]').value,
+          workedHours: row.querySelector('[name="worked_hours"]').value,
+          overTime: row.querySelector('[name="over_time"]').value,
+          perMission: row.querySelector('[name="permission"]').value,
+          casualLeave: row.querySelector('[name="cl"]').value,
+          sickLeave: row.querySelector('[name="sl"]').value,
+          status: document.querySelector('#applyall').value,
+        };
+            
+        $.ajax({
+          url: '/attendance/',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            // Data to be sent in the request
+            'employee_name': rowData.id,
+            'date': rowData.date,
+            'working_hours': rowData.workingHours,
+            'worked_hours': rowData.workedHours,
+            'over_time': rowData.overTime,
+            'permission': rowData.perMission,
+            'cl': rowData.casualLeave,
+            'sl': rowData.sickLeave,
+            'status': rowData.status,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          success: function (response, status, xhr) {
+            var datta = $("#datepicker").val();
+
+        $.ajax({
+          url: '/datewise_atend/',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            date: datta,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          success: function (response) {
+            console.log(response);
+      
+            var tableBody = $('#tableBody');
+            tableBody.empty();
+
+            for (var i = 0; i < response.length; i++) {
+              var rowData = response[i];
+          
+              var row =
+                '<tr>' +
+                '<td style="text-align:center;">' + 
+                '<input type="checkbox" id="checkbox" class="Checkbox"  data-id="' + rowData.id + '"  name="checkBox" >' + '</td>' +
+                '<td id="id"  style="text-align:center;">' +
+                '<div class="d-flex flex-column justify-content-center">' +
+                '<h6 class="mb-0 text-sm">' + (i + 1 ) +  '</h6>' +
+                '</div>' + '</td>' +
+      
+                '<td id="employee_name" >' +
+                '<div class="d-flex flex-column justify-content-center">' +
+                '<h6 class="mb-0 text-sm">' + '<input type="name" style="border-style:none;background-color:white;" class="form-control" name="employee_name" id="Emp_name" value="' + rowData.Employee_Name + '" readonly>' + '</h6>' +
+                ' </div>' + '</td>' +
+      
+                '<td style="width:3%;text-align:center;">' +
+                '<div class="d-flex flex-column justify-content-center">' +
+                '<h6 class="mb-0 text-sm">' + '<input type="number" style="border-style:none;background-color:white;text-align:center;" class="form-control" name="working_hours" id="wrking_hour" value="' + rowData.Working_Hours + '" readonly>' + '</h6>' +
+                '</div>' + '</td>' +
+      
+                '<td style="width:4%;">' + '<div class="d-flex flex-column justify-content-center">' +
+                '<h6 class="mb-0 text-sm"><input type="number"  class="form-control" name="worked_hours" min="0" id="wrked_hour" value="' + rowData.Attendance.Worked_Hours + '">' + '</h6>' +
+                '</div>' + '</td>' +
+      
+                '<td style="width:4%;>' + '<div class="d-flex flex-column justify-content-center">' +
+                '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="over_time"  min="0" id="ovrtime" value="' + rowData.Attendance.Over_Time + '">' + '</h6>' +
+                '</div>' + '</td>' +
+      
+                '<td style="width:4%;border-style:none;">' + '<div class="d-flex flex-column justify-content-center">' +
+                '<h6 class="mb-0 text-sm">' + '<input type="number" class="form-control" name="permission"  min="0" id="prmison" value="' + rowData.Attendance.Permission + '">' + '</h6>' +
+                '</div>' + '</td>' +
+      
+                '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+                '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="cl" id="clv" value="' + rowData.Attendance.Casual_Leave + '" readonly>' + '</h6>' +
+                '</div>' + '</td>' +
+      
+                '<td style="width:6%;">' + '<div class="d-flex flex-column justify-content-center">' +
+                '<h6 class="mb-0 text-sm">' + '<input type="number" style="text-align:center;border-style:none;background-color:white;"class="form-control" name="sl" id="slv" value="' + rowData.Attendance.Sick_Leave + '" readonly>' + '</h6>' +
+                '</div>' + '</td>' +
+      
+                '<td style="width:7%;">' +
+                '<input type="name" style="border-style:none;background-color:white;" class="form-control" id="sts" name="status" value="' + rowData.Attendance.Status + '" id="floatingInput" readonly>' + '</h6>' +
+                '</td>' +
+      
+                '<td style="width:19%;" id="Attendance">' +
+                  '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="presentfunction(this)" value="Present" class="btn btn-success">Present</button>' +
+                  '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" onclick="Absentfunction(this)" value="Absent" class="btn btn-danger">Absent</button>' +
+                  '&nbsp;' + '<button style="padding: 3px 5px;" data-id="' + rowData.id + '" type="button" id="casualbtn" onclick="Casualfunction(this)" value="Casual" class="btn btn-info">Casual</button>' +
+                  '&nbsp;' + '<button style="padding: 3px 5px; width: 20%;" data-id="' + rowData.id + '" type="button" onclick="Sickfunction(this)" value="Sick" class="btn btn-warning">Sick</button>' +
+                  '</td>';
+                '</tr>';
+              tableBody.append(row);
+            }
+          }
+        });
+                
+           
+          },
+          error: function(error) {
+            console.log("Error occurred during AJAX request");
+            console.log(error);
+          }
+        });
+      });
+    }
+  }
+  
+  document.getElementById('checkbox').addEventListener('click', function () {
+    applyFunction();
+  });
+  
+  document.getElementById('selectAll').addEventListener('click', function () {
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var isSelectAllChecked = this.checked;
+  
+    checkboxes.forEach(function (checkbox) {
+      checkbox.checked = isSelectAllChecked;
+    });
+  });
+</script>  

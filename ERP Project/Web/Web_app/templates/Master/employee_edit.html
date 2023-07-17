@@ -1,0 +1,318 @@
+{% load static%}
+{% include 'head_foot/header.html' %}
+{% include 'message.html' %}
+
+
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Personal Details </h6>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-0">              
+              <table class="table align-items-center mb-0">
+                {% if emp_lst %}
+                <form action="{% url 'employee_edit' employee_id=emp_lst.id %}" method="post">
+                    {% csrf_token %}
+                <tbody>
+                    <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <input type="name" class="form-control" name="employee_name" value="{{emp_lst.Employee_Name}}" id="floatingInput" placeholder="Visitor Name" required="">
+                            <label for="floatingInput">Employee Name*</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="tel" maxlength="10" class="form-control" name="phone" value="{{emp_lst.Phone_Number}}" id="floatingInput" placeholder="Phone Number" required="">
+                            <label for="floatingInput">Phone Number*</label>
+                        </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="cur_address" value="{{emp_lst.Current_Address}}" id="floatingInput" placeholder="Current Address" required="">
+                            <label for="floatingInput">Current Address*</label>
+                        </div></td>
+                      </tr>
+
+                  <tr>
+                    <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                        <select type="name" class="form-control" name="gender" value="{{emp_lst.Gender}}" id="floatingInput" required="" >
+                            <option value="{{emp_lst.Gender}}">{{emp_lst.Gender}}</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        <label for="floatingInput">Gender*</label>
+                    </div></td>
+                    <td><div style="width:85%;" class="form-floating">
+                        <input type="email" class="form-control" name="email" value="{{emp_lst.Email_Id}}" id="floatingInput" placeholder="Email Id" required="">
+                        <label for="floatingInput">Email Id*</label>
+                      </div></td>
+                    <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                        <input type="name" class="form-control" name="Per_address" value="{{emp_lst.Permanent_Address}}" id="floatingInput" placeholder="Permanent Address" required="">
+                        <label for="floatingInput">Permanent Address*</label>
+                    </div></td>
+                  </tr>
+
+                  <tr>
+                    <td><div style="width:85%;" class="form-floating">
+                        <input type="date" class="form-control" name="dob" value="{{emp_lst.Date_Of_Birth}}" id="floatingInput" placeholder="Date Of Birth"required="" >
+                        <label for="floatingInput">Date Of Birth*</label>
+                      </div></td>
+                      <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                        <select type="name" class="form-control" name="department" value="{{emp_lst.Department}}" id="floatingInput" required="" >
+                          <option value="{{emp_lst.Department}}">{{emp_lst.department_name}}</option>
+                          {% for depart in depart %}
+                          <option value="{{depart.id}}">{{depart.Department}}</option>
+                          {% endfor %}
+                      </select>
+                            <label for="floatingInput">Department*</label>
+                    </div></td>
+                    
+                    <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                        <input type="name" class="form-control" maxlength="12" name="aadhar" value="{{emp_lst.Aadhar_Number}}" id="floatingInput" placeholder="Aadhar Number" required="">
+                        <label for="floatingInput">Aadhar Number*</label>
+                    </div></td>
+                  </tr>
+
+                  <tr>
+                    <td><div style="width:85%;" class="form-floating">
+                        <input type="name" class="form-control" name="blood" value="{{emp_lst.Blood_Group}}" id="floatingInput" placeholder="Blood Group" required="">
+                        <label for="floatingInput">Blood Group*</label>
+                    </div></td>
+
+                    <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                      <select type="name" class="form-control" name="designation" value="{{emp_lst.designation_name}}" id="floatingInput" required="" >
+                        <option value="{{emp_lst.Designation}}">{{emp_lst.designation_name}}</option>
+                        {% for designation_lst in designation_lst %}
+                        <option value="{{designation_lst.id}}">{{designation_lst.Designation}}</option>
+                        {% endfor %}
+                    </select>
+                          <label for="floatingInput">Designation*</label>
+                  </div></td>
+
+                  
+                    <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                        <input type="name" class="form-control" maxlength="10" name="pan" value="{{emp_lst.Pan_Number}}" id="floatingInput" placeholder="Pan Number" >
+                        <label for="floatingInput">Pan Number</label>
+                    </div></td>
+                  </tr>
+
+                  <tr>   
+                    <td><div style="width:85%;" class="form-floating">
+                        <input type="date" class="form-control" name="doj" value="{{emp_lst.Date_Of_Joining}}" id="floatingInput" placeholder="Date Of Joining" required="">
+                        <label for="floatingInput">Date Of Joining*</label>
+                    </div></td>
+                    <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                        <input type="name" class="form-control" name="qualification" value="{{emp_lst.Qualification}}" id="floatingInput" placeholder="Visitor Name" required="">
+                        <label for="floatingInput">Qualification*</label>
+                    </div></td>
+                    <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                        <input type="name" class="form-control" maxlength="12" name="EPF" value="{{emp_lst.EPF_Number}}" id="floatingInput" placeholder="EPF Number">
+                        <label for="floatingInput">EPF Number</label>
+                    </div></td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card mb-4">
+          <div class="card-header pb-0">
+            <h6>Other Details</h6>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center justify-content-center mb-0">
+                <tbody>
+                    <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <select type="name" class="form-control" name="experience" value="{{emp_lst.Previous_Experience}}" id="floatingInput" required="" >
+                            <option value="{{emp_lst.Previous_Experience}}">{{emp_lst.Previous_Experience}}</option>
+                            <option value="Fresher">Fresher</option>
+                            <option value="Experience">Experience</option>
+                            <option value="Through Consultant">Through Consultant</option>
+                            <option value="Contract">Contract</option>
+                        </select>
+                            <label for="floatingInput">Previous Experience*</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="number" class="form-control" name="experience_years" min="0" value="{{emp_lst.Experience_years}}" id="floatingInput" placeholder="Experience Years" >
+                            <label for="floatingInput">Experience Years</label>
+                        </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="reference_through" value="{{emp_lst.Reference_Through}}" id="floatingInput" placeholder="Reference Through" >
+                            <label for="floatingInput">Reference Through</label>
+                        </div></td>
+                      </tr>
+                      <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <input type="name" class="form-control" name="previous_Company_name" value="{{emp_lst.Previous_Company_Name}}" id="floatingInput" placeholder="Previous Company Name">
+                            <label for="floatingInput">Previous Company Name</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="reference_name" value="{{emp_lst.Reference_Name}}" id="floatingInput" placeholder="Reference Name">
+                            <label for="floatingInput">Reference Name</label>
+                        </div></td>
+                        
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                          <select type="name" class="form-control" name="branch" value="{{emp_lst.Branch}}" id="floatingInput" required="" >
+                            <option value="{{emp_lst.Branch}}">{{emp_lst.branch_n}}</option>
+                            {% for branch_lst in branch_lst %}
+                            <option value="{{branch_lst.id}}">{{branch_lst.Branch}}</option>
+                            {% endfor %}
+                        </select>
+                              <label for="floatingInput">Branch*</label>
+                      </div></td>
+                      </tr>
+                    
+                  </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h6>Bank Details</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0">
+                  <tbody>
+                    <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <input type="name" class="form-control" name="bank_name" value="{{emp_lst.Bank_Name}}"id="floatingInput" placeholder="Bank Name" required="">
+                            <label for="floatingInput">Bank Name*</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" maxlength="17" name="account_number" value="{{emp_lst.Account_Number}}" id="floatingInput" placeholder="Account Number" required="">
+                            <label for="floatingInput">Account Number*</label>
+                        </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="account_holder_name" value="{{emp_lst.Account_Holder_Name}}" id="floatingInput" placeholder="Account Holder Name" required="">
+                            <label for="floatingInput">Account Holder Name*</label>
+                        </div></td>
+                      </tr>
+                      <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <input type="name" class="form-control" name="ifsc" value="{{emp_lst.IFSC_Code}}" id="floatingInput" placeholder="IFSC Code" required="">
+                            <label for="floatingInput">IFSC Code*</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="branch_name" value="{{emp_lst.Branch_Name}}" id="floatingInput" placeholder="Branch Name" required="">
+                            <label for="floatingInput">Branch Name*</label>
+                        </div></td>
+                        
+                      </tr>
+                      
+                    </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-6">
+            <div class="card-header pb-0">
+              <h6>Salary Details</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center justify-content-center mb-0">
+                  <tbody>
+                    
+                    <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <select type="name" class="form-control" name="salary_type" value="{{emp_lst.Salary_Type}}" id="floatingInput" placeholder="Salary Type" required="">
+                            <option value="{{emp_lst.Salary_Type}}">{{emp_lst.Salary_Type}}</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+                            <label for="floatingInput">Salary Type*</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="hra" value="{{emp_lst.HRA}}" id="floatingInput" placeholder="HRA" required="">
+                            <label for="floatingInput">HRA*</label>
+                        </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="professional_tax" value="{{emp_lst.Professional_Tax}}" id="floatingInput" placeholder="Professional Tax" required="">
+                            <label for="floatingInput">Professional Tax*</label>
+                        </div></td>
+                      </tr>
+
+                      <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <input type="name" class="form-control" name="basic_pay" value="{{emp_lst.Basic_Pay}}" id="floatingInput" placeholder="Basic Pay" required="">
+                            <label for="floatingInput">Basic Pay*</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="medical_allowence" value="{{emp_lst.Medical_Allowence}}" id="floatingInput" placeholder="Medical Allowence" required="">
+                            <label for="floatingInput">Medical Allowence*</label>
+                        </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="rd" value="{{emp_lst.RD}}" id="floatingInput" placeholder="RD" required="">
+                            <label for="floatingInput">RD*</label>
+                        </div></td>
+                      </tr>
+
+                      <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <input type="name" class="form-control" name="working_hours" value="{{emp_lst.Working_Hours}}" id="floatingInput" placeholder="Working Hours" >
+                            <label for="floatingInput">Working Hours</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="conveyance_allowence" value="{{emp_lst.Conveyance_Allowence}}" id="floatingInput" placeholder="Conveyance Allowence" >
+                            <label for="floatingInput">Conveyance Allowence</label>
+                        </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="pf" value="{{emp_lst.PF}}" id="floatingInput" placeholder="PF" required="">
+                            <label for="floatingInput">PF*</label>
+                        </div></td>
+                      </tr>
+
+                      <tr>
+                        <td><div style="width:85%;" class="form-floating">
+                            <input type="name" class="form-control" name="casual_leave_per_month" value="{{emp_lst.Casual_Leave_Permonth}}" id="floatingInput" placeholder="Casual Leave Per Month" >
+                            <label for="floatingInput">Casual Leave Per Month</label>
+                          </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="general_allowence" value="{{emp_lst.General_Allowence}}" id="floatingInput" placeholder="General Allowence" required="">
+                            <label for="floatingInput">General Allowence</label>
+                        </div></td>
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="esi" value="{{emp_lst.ESI}}" id="floatingInput" placeholder="ESI" required="">
+                            <label for="floatingInput">ESI*</label>
+                        </div></td>
+                      </tr>
+                      <tr>
+                        
+                        <td ><div style="width:85%;possition:absolute;" class="form-floating">
+                            <input type="name" class="form-control" name="net_salary" value="{{emp_lst.Net_Salary}}" id="floatingInput" placeholder="Net Salary" required="">
+                            <label for="floatingInput">Net Salary*</label>
+                        </div></td>
+                      </tr>
+
+                    </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button style="width:8%;position:absolute;right:23%;top:95%;" type="submit"  id="clickButton" class="btn">Update</button>  
+    </form>
+    {% endif %}     
+     <button style="width:8%;position:absolute;right:14%;top:95%;" id="cancelButton" type="button"  class="btn">Cancel</button>
+     <a style="width:8%;position:absolute;right:5%;top:95%;" type="button" href="/employee_list/" class="btn">List</a>
+     {% include 'head_foot/footer.html' %}
